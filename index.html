@@ -14,21 +14,26 @@ body{
     height:100vh;
 }
 
-/* center wrapper */
-.container{
+/* 🔥 BOX (NORMAL FOR PAGE 1 & 2) */
+.box{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px #ccc;
+    width:460px;
     text-align:center;
 }
 
-.box{
-    margin-top:20px;
-    padding:20px;
-    background:white;
-    border-radius:10px;
-    box-shadow:0 0 10px #ccc;
-    width:380px;
+/* 🔥 FULLSCREEN MODE FOR DASHBOARD */
+.fullscreen{
+    width:100vw !important;
+    height:100vh !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
 }
 
-.hidden{ display:none; }
+/* HIDDEN */
+.hidden{display:none;}
 
 button{
     padding:10px;
@@ -36,96 +41,141 @@ button{
     cursor:pointer;
 }
 
-input{
+input, textarea{
     padding:10px;
-    width:200px;
+    width:90%;
 }
-a{
-    display:inline-block;
-    margin-top:5px;
+
+.star{
+    font-size:26px;
+    cursor:pointer;
+    color:gray;
+}
+.active{color:gold;}
+
+/* 🔥 DASHBOARD FULL SCREEN GRID */
+.dashboard{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap:12px;
+    margin-top:10px;
+    height:80vh;
+}
+
+.card{
+    background:#f7f7f7;
+    padding:10px;
+    border-radius:10px;
+    box-sizing:border-box;
+    overflow:auto;
+}
+
+.empty{
+    background:#eee;
+    border-radius:10px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="box" id="box">
 
 <h2>🚗 Rideshare System</h2>
 
 <!-- PAGE 1 -->
-<div id="page1" class="box">
-
+<div id="p1">
     <h3>Select Plan</h3>
-
-    <button onclick="goPage2(30,5)">30 Min - $5</button>
-    <button onclick="goPage2(60,10)">1 Hour - $10</button>
-
+    <button onclick="go(1,5)">30 Min - $5</button>
+    <button onclick="go(60,10)">1 Hour - $10</button>
 </div>
 
 <!-- PAGE 2 -->
-<div id="page2" class="hidden box">
+<div id="p2" class="hidden">
 
     <h3>💳 Payment</h3>
+    <p id="price"></p>
 
-    <p id="priceText"></p>
-
-    <!-- VENMO -->
-    <p>📱 Venmo</p>
-    <img width="140"
+    <h4>Venmo</h4>
+    <img width="130"
     src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://venmo.com/u/manik0010175">
-    <br>
-    <a href="https://venmo.com/u/manik0010175" target="_blank">Open Venmo</a>
 
-    <hr>
-
-    <!-- CASH APP -->
-    <p>📱 Cash App</p>
-    <img width="140"
+    <h4>Cash App</h4>
+    <img width="130"
     src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://cash.app/$habibhabibhadhh">
-    <br>
-    <a href="https://cash.app/$habibhabibhadhh" target="_blank">Open Cash App</a>
 
-    <hr>
-
-    <h3>🔑 PIN</h3>
-    <input type="text" id="pinInput" placeholder="Enter PIN">
+    <h4>🔑 PIN</h4>
+    <input id="pin" placeholder="Enter PIN">
     <br>
-    <button onclick="checkPin()">Enter</button>
+    <button onclick="check()">Enter</button>
 
     <p id="msg"></p>
+</div>
+
+<!-- PAGE 3 DASHBOARD -->
+<div id="p3" class="hidden">
+
+<h2>🚗 ACTIVE RIDE</h2>
+<p id="timer">⏱️</p>
+
+<div class="dashboard">
+
+    <div class="card">
+        <h4>📍 Google Map</h4>
+        <iframe width="100%" height="100%"
+        src="https://maps.google.com/maps?q=New York&output=embed"></iframe>
+    </div>
+
+    <div class="card">
+        <h4>▶ YouTube</h4>
+        <a href="https://youtube.com" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="70">
+        </a>
+    </div>
+
+    <div class="card">
+        <h4>📝 Notebook</h4>
+        <textarea id="note"></textarea>
+    </div>
+
+    <div class="card">
+        <h4>🚕 Waze</h4>
+        <iframe width="100%" height="100%"
+        src="https://embed.waze.com/iframe?zoom=12&lat=40.7128&lon=-74.0060"></iframe>
+    </div>
+
+    <div class="empty"></div>
+    <div class="empty"></div>
 
 </div>
 
-<!-- PAGE 3 -->
-<div id="page3" class="hidden box">
+</div>
 
-    <h2>Welcome 🎉</h2>
+<!-- PAGE 4 -->
+<div id="p4" class="hidden">
+    <h2>⛔ TIME EXPIRED</h2>
+    <button onclick="renew()">🔁 Renew</button>
+</div>
 
-    <p>🚗 Ride Active</p>
+<!-- PAGE 5 -->
+<div id="p5" class="hidden">
 
-    <hr>
+<h3>⭐ Rate Ride</h3>
 
-    <!-- YOUTUBE APP LINK -->
-    <h3>YouTube</h3>
-    <a href="https://www.youtube.com" target="_blank">
-        <button>Open YouTube App</button>
-    </a>
+<span class="star" onclick="rate(1)">★</span>
+<span class="star" onclick="rate(2)">★</span>
+<span class="star" onclick="rate(3)">★</span>
+<span class="star" onclick="rate(4)">★</span>
+<span class="star" onclick="rate(5)">★</span>
 
-    <hr>
+<p id="rt"></p>
 
-    <!-- MAP -->
-    <h3>Google Map</h3>
-    <iframe width="320" height="180"
-    src="https://maps.google.com/maps?q=New York&output=embed"></iframe>
+<textarea id="sug"></textarea>
+<br>
+<button onclick="send()">Send</button>
 
-    <hr>
-
-    <!-- WAZE -->
-    <h3>Waze Map</h3>
-    <iframe width="320" height="180"
-    src="https://embed.waze.com/iframe?zoom=12&lat=40.7128&lon=-74.0060">
-    </iframe>
+<p id="thx"></p>
 
 </div>
 
@@ -133,44 +183,75 @@ a{
 
 <script>
 
-let correctPin = "";
-let price = 0;
+let pinCode="";
+let time=0;
+let timer;
+let rating=0;
 
-/* PAGE CONTROL */
-function showPage(n){
-
-    document.getElementById("page1").style.display="none";
-    document.getElementById("page2").style.display="none";
-    document.getElementById("page3").style.display="none";
-
-    document.getElementById("page"+n).style.display="block";
-}
-
-showPage(1);
-
-/* PLAN */
-function goPage2(min,p){
-
-    price = p;
-    correctPin = (min === 30) ? "R1230" : "RIDE60";
-
-    document.getElementById("priceText").innerText =
-        "💰 Pay $" + price;
-
-    showPage(2);
-}
-
-/* PIN CHECK */
-function checkPin(){
-
-    let pin = document.getElementById("pinInput").value.trim();
-
-    if(pin === correctPin){
-        showPage(3);
-    } else {
-        document.getElementById("msg").innerText =
-            "❌ Wrong PIN!";
+function show(n){
+    for(let i=1;i<=5;i++){
+        let x=document.getElementById("p"+i);
+        if(x) x.style.display="none";
     }
+    document.getElementById("p"+n).style.display="block";
+}
+
+show(1);
+
+function go(min,price){
+    pinCode=(min==1)?"R1230":"RIDE60";
+    time=min*60;
+    document.getElementById("price").innerText="💰 $"+price;
+    show(2);
+}
+
+function check(){
+    let p=document.getElementById("pin").value.trim();
+    if(p===pinCode){
+        document.getElementById("box").classList.add("fullscreen");
+        show(3);
+        start();
+    }else{
+        document.getElementById("msg").innerText="❌ Wrong PIN";
+    }
+}
+
+function start(){
+clearInterval(timer);
+timer=setInterval(()=>{
+    let m=Math.floor(time/60);
+    let s=time%60;
+
+    document.getElementById("timer").innerText=
+    "⏱️ "+m+":"+ (s<10?"0":"")+s;
+
+    time--;
+
+    if(time<0){
+        clearInterval(timer);
+        show(4);
+        show(5);
+    }
+},1000);
+}
+
+function renew(){
+    document.getElementById("box").classList.remove("fullscreen");
+    show(1);
+}
+
+function rate(n){
+    rating=n;
+    let st=document.querySelectorAll(".star");
+    st.forEach((e,i)=>{
+        e.classList.remove("active");
+        if(i<n) e.classList.add("active");
+    });
+}
+
+function send(){
+    let s=document.getElementById("sug").value;
+    document.getElementById("thx").innerText="✔ "+s;
 }
 
 </script>
