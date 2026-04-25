@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
 <head>
 <title>Premium Access Site</title>
@@ -14,7 +13,7 @@ body {
 .hidden { display: none; }
 
 /* buttons */
-button { padding: 10px; margin: 5px; }
+button { padding: 10px; margin: 5px; cursor:pointer; }
 
 /* ⭐ STAR */
 .stars span {
@@ -44,6 +43,12 @@ button { padding: 10px; margin: 5px; }
 .box {
     width: 300px;
 }
+
+/* input */
+input {
+    width: 90%;
+    padding: 6px;
+}
 </style>
 
 </head>
@@ -51,79 +56,90 @@ button { padding: 10px; margin: 5px; }
 <body>
 
 <!-- PLAN -->
-
 <div id="planSection">
     <h2>Choose Plan</h2>
 
-<button onclick="selectPlan(1)">30 Minutes - $5</button>
-<button onclick="selectPlan(60)">1 Hour - $10</button>
+    <button onclick="selectPlan(30)">30 Minutes - $5</button>
+    <button onclick="selectPlan(60)">1 Hour - $10</button>
 
-<p id="selectedPlan"></p>
-
+    <p id="selectedPlan"></p>
 </div>
 
 <!-- PAYMENT -->
-
 <div id="paymentSection" class="hidden">
     <h2>Scan & Pay</h2>
 
-<div class="payment-box">
+    <div class="payment-box">
 
-    <div class="box">
-        <h3>Cash App</h3>
-        <img src="cashapp.jpg" width="200">
+        <div class="box">
+            <h3>Cash App</h3>
+            <img src="cashapp.jpg" width="200">
+        </div>
+
+        <div class="box">
+            <h3>Venmo</h3>
+            <img src="venmo.jpg" width="200">
+        </div>
+
     </div>
 
-    <div class="box">
-        <h3>Venmo</h3>
-        <img src="venmo.jpg" width="200">
-    </div>
-
-</div>
-
-<p>After payment click below:</p>
-<button onclick="enterSite()">I Have Paid</button>
-
+    <p>After payment click below:</p>
+    <button onclick="enterSite()">I Have Paid</button>
 </div>
 
 <!-- MAIN -->
-
 <div id="mainSite" class="hidden">
 
 <h1>Welcome 🎉</h1>
 <p id="timer"></p>
 
-<!-- SIDE BY SIDE CONTENT -->
-
 <div class="content-box">
-<!-- GOOGLE MAP -->
-<div class="box">
-    <h3>Google Map</h3>
-    <iframe width="300" height="200"
-    src="https://maps.google.com/maps?q=usa&output=embed"></iframe>
-</div>
 
-<!-- YOUTUBE -->
-<div class="box">
-    <h3>YouTube</h3>
-    <iframe width="300" height="200"
-    src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
-</div>
+    <!-- GOOGLE MAP -->
+    <div class="box">
+        <h3>Google Map</h3>
+        <iframe width="300" height="200"
+        src="https://maps.google.com/maps?q=usa&output=embed"></iframe>
+    </div>
 
+    <!-- YOUTUBE APP (UPDATED) -->
+    <div class="box">
+        <h3>YouTube 🎵</h3>
 
+        <!-- YouTube icon -->
+        <a href="https://www.youtube.com" target="_blank">
+            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="50">
+        </a>
 
-<!-- NOTES -->
-<div class="box">
-    <h3>Notes</h3>
-    <textarea rows="8" style="width:100%;"></textarea>
-</div>
+        <br><br>
+
+        <!-- search -->
+        <input type="text" id="ytSearch" placeholder="Search song/video...">
+        <button onclick="searchVideo()">Search</button>
+
+        <!-- player -->
+        <iframe id="ytFrame"
+            width="300"
+            height="200"
+            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+            allowfullscreen>
+        </iframe>
+
+        <br>
+        <button onclick="goFull()">Fullscreen</button>
+    </div>
+
+    <!-- NOTES -->
+    <div class="box">
+        <h3>Notes</h3>
+        <textarea rows="8" style="width:100%;"></textarea>
+    </div>
 
 </div>
 
 </div>
 
 <!-- LOCK -->
-
 <div id="locked" class="hidden">
 
 <h1>⛔ Time Expired</h1>
@@ -182,8 +198,7 @@ function startTimer(){
         let m = String(Math.floor(timeLeft/60)).padStart(2,'0');
         let s = String(timeLeft%60).padStart(2,'0');
 
-        document.getElementById("timer").innerText =
-            m+":"+s;
+        document.getElementById("timer").innerText = m+":"+s;
 
         timeLeft--;
 
@@ -199,10 +214,30 @@ function startTimer(){
 /* RENEW */
 function renewPlan(){
     clearInterval(timer);
-    timeLeft = 0;
-
     document.getElementById("locked").style.display="none";
     document.getElementById("paymentSection").style.display="block";
+}
+
+/* YOUTUBE SEARCH */
+function searchVideo(){
+    let q = document.getElementById("ytSearch").value;
+
+    if(q.trim() === "") return;
+
+    let url = "https://www.youtube.com/embed?listType=search&list=" + encodeURIComponent(q);
+
+    document.getElementById("ytFrame").src = url;
+}
+
+/* FULLSCREEN */
+function goFull(){
+    let frame = document.getElementById("ytFrame");
+
+    if(frame.requestFullscreen){
+        frame.requestFullscreen();
+    } else if(frame.webkitRequestFullscreen){
+        frame.webkitRequestFullscreen();
+    }
 }
 
 /* RATING */
