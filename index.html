@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>Premium Access Site</title>
+
+<style>
+body {
+    font-family: Arial;
+    text-align: center;
+}
+
+/* hide */
+.hidden { display: none; }
+
+/* buttons */
+button { padding: 10px; margin: 5px; }
+
+/* ⭐ STAR */
+.stars span {
+    font-size: 30px;
+    cursor: pointer;
+    color: gray;
+}
+.stars .active { color: gold; }
+
+/* 📦 PAYMENT SIDE BY SIDE */
+.payment-box {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 20px;
+}
+
+/* 📦 MAIN CONTENT SIDE BY SIDE */
+.content-box {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* each box */
+.box {
+    width: 300px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- PLAN -->
+
+<div id="planSection">
+    <h2>Choose Plan</h2>
+
+<button onclick="selectPlan(1)">30 Minutes - $5</button>
+<button onclick="selectPlan(60)">1 Hour - $10</button>
+
+<p id="selectedPlan"></p>
+
+</div>
+
+<!-- PAYMENT -->
+
+<div id="paymentSection" class="hidden">
+    <h2>Scan & Pay</h2>
+
+<div class="payment-box">
+
+    <div class="box">
+        <h3>Cash App</h3>
+        <img src="cashapp.jpg" width="200">
+    </div>
+
+    <div class="box">
+        <h3>Venmo</h3>
+        <img src="venmo.jpg" width="200">
+    </div>
+
+</div>
+
+<p>After payment click below:</p>
+<button onclick="enterSite()">I Have Paid</button>
+
+</div>
+
+<!-- MAIN -->
+
+<div id="mainSite" class="hidden">
+
+<h1>Welcome 🎉</h1>
+<p id="timer"></p>
+
+<!-- SIDE BY SIDE CONTENT -->
+
+<div class="content-box">
+<!-- GOOGLE MAP -->
+<div class="box">
+    <h3>Google Map</h3>
+    <iframe width="300" height="200"
+    src="https://maps.google.com/maps?q=usa&output=embed"></iframe>
+</div>
+
+<!-- YOUTUBE -->
+<div class="box">
+    <h3>YouTube</h3>
+    <iframe width="300" height="200"
+    src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>
+</div>
+
+
+
+<!-- NOTES -->
+<div class="box">
+    <h3>Notes</h3>
+    <textarea rows="8" style="width:100%;"></textarea>
+</div>
+
+</div>
+
+</div>
+
+<!-- LOCK -->
+
+<div id="locked" class="hidden">
+
+<h1>⛔ Time Expired</h1>
+
+<button onclick="renewPlan()">🔁 Renew Plan</button>
+
+<h3>Rate Your Experience</h3>
+
+<div class="stars">
+    <span onclick="setRating(1)">★</span>
+    <span onclick="setRating(2)">★</span>
+    <span onclick="setRating(3)">★</span>
+    <span onclick="setRating(4)">★</span>
+    <span onclick="setRating(5)">★</span>
+</div>
+
+<p id="ratingText">No rating yet</p>
+
+<textarea id="commentBox" rows="4" placeholder="Write comment..."></textarea>
+
+<br>
+<button onclick="submitFeedback()">Submit</button>
+
+<p id="thanksMsg"></p>
+
+</div>
+
+<script>
+
+let timeLeft = 0;
+let timer;
+let rating = 0;
+
+/* PLAN */
+function selectPlan(m){
+    timeLeft = m * 60;
+
+    document.getElementById("selectedPlan").innerText =
+        "Selected: " + m + " minutes";
+
+    document.getElementById("planSection").style.display="none";
+    document.getElementById("paymentSection").style.display="block";
+}
+
+/* ENTER */
+function enterSite(){
+    document.getElementById("paymentSection").style.display="none";
+    document.getElementById("mainSite").style.display="block";
+    startTimer();
+}
+
+/* TIMER */
+function startTimer(){
+    timer = setInterval(()=>{
+
+        let m = String(Math.floor(timeLeft/60)).padStart(2,'0');
+        let s = String(timeLeft%60).padStart(2,'0');
+
+        document.getElementById("timer").innerText =
+            m+":"+s;
+
+        timeLeft--;
+
+        if(timeLeft < 0){
+            clearInterval(timer);
+            document.getElementById("mainSite").style.display="none";
+            document.getElementById("locked").style.display="block";
+        }
+
+    },1000);
+}
+
+/* RENEW */
+function renewPlan(){
+    clearInterval(timer);
+    timeLeft = 0;
+
+    document.getElementById("locked").style.display="none";
+    document.getElementById("paymentSection").style.display="block";
+}
+
+/* RATING */
+function setRating(n){
+    rating = n;
+
+    let stars = document.querySelectorAll(".stars span");
+
+    stars.forEach((s,i)=>{
+        s.classList.remove("active");
+        if(i < n) s.classList.add("active");
+    });
+
+    document.getElementById("ratingText").innerText =
+        "Rating: " + n;
+}
+
+/* COMMENT */
+function submitFeedback(){
+    let c = document.getElementById("commentBox").value;
+
+    document.getElementById("thanksMsg").innerText =
+        "Thanks! ⭐" + rating + " | " + c;
+}
+
+</script>
+
+</body>
+</html>
