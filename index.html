@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="bn">
 <head>
+<meta charset="UTF-8">
 <title>Rideshare System</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<link rel="manifest" href="manifest.json">
 
 <style>
 body{
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     background:#f4f4f4;
     margin:0;
     display:flex;
@@ -14,7 +21,6 @@ body{
     height:100vh;
 }
 
-/* 🔥 BOX (NORMAL FOR PAGE 1 & 2) */
 .box{
     background:white;
     padding:20px;
@@ -22,9 +28,9 @@ body{
     box-shadow:0 0 10px #ccc;
     width:460px;
     text-align:center;
+    transition: all 0.3s ease;
 }
 
-/* 🔥 FULLSCREEN MODE FOR DASHBOARD */
 .fullscreen{
     width:100vw !important;
     height:100vh !important;
@@ -32,48 +38,78 @@ body{
     box-shadow:none !important;
 }
 
-/* HIDDEN */
-.hidden{display:none;}
-
 button{
-    padding:10px;
+    padding:10px 15px;
     margin:5px;
     cursor:pointer;
+    border: none;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    font-weight: bold;
 }
+button:hover{ background: #0056b3; }
 
 input, textarea{
     padding:10px;
     width:90%;
+    margin-top: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 .star{
-    font-size:26px;
+    font-size:30px;
     cursor:pointer;
     color:gray;
 }
 .active{color:gold;}
 
-/* 🔥 DASHBOARD FULL SCREEN GRID */
+/* ড্যাশবোর্ড গ্রিড আপডেট (প্লে-স্টোর অ্যাপ লুকের জন্য) */
 .dashboard{
     display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap:12px;
-    margin-top:10px;
-    height:80vh;
+    grid-template-columns: repeat(2, 1fr);
+    gap:15px;
+    margin-top:15px;
+    height: auto !important;
+    padding: 10px;
+}
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
 }
 
 .card{
     background:#f7f7f7;
-    padding:10px;
+    padding:15px 10px;
     border-radius:10px;
-    box-sizing:border-box;
     overflow:auto;
+    border: 1px solid #e0e0e0;
 }
 
-.empty{
-    background:#eee;
-    border-radius:10px;
+.app-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #fdfdfd !important;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.app-card:active {
+    transform: scale(0.95);
+}
+
+.open-btn {
+    font-size: 12px;
+    background: #28a745;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    margin-top: 8px;
+    font-weight: bold;
 }
 </style>
 </head>
@@ -84,114 +120,105 @@ input, textarea{
 
 <h2>🚗 Rideshare System</h2>
 
-<!-- PAGE 1 -->
 <div id="p1">
     <h3>Select Plan</h3>
-    <button onclick="go(1,5)">30 Min - $5</button>
+    <button onclick="go(30,5)">30 Min - $5</button>
     <button onclick="go(60,10)">1 Hour - $10</button>
 </div>
 
-<!-- PAGE 2 -->
-<div id="p2" class="hidden">
-
+<div id="p2" style="display:none;">
     <h3>💳 Payment</h3>
-    <p id="price"></p>
+    <h2 id="price"></h2>
 
-    <h4>Venmo</h4>
-    <img width="130"
-    src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://venmo.com/u/manik0010175">
+    <div style="display: flex; justify-content: space-around; margin-bottom: 15px;">
+        <div>
+            <h4>Venmo</h4>
+            <img width="120" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://venmo.com/u/manik0010175" alt="Venmo QR">
+        </div>
+        <div>
+            <h4>Cash App</h4>
+            <img width="120" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://cash.app/$habibhabibhadhh" alt="Cash App QR">
+        </div>
+    </div>
 
-    <h4>Cash App</h4>
-    <img width="130"
-    src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://cash.app/$habibhabibhadhh">
-
-    <h4>🔑 PIN</h4>
+    <h4>🔑 Enter PIN</h4>
     <input id="pin" placeholder="Enter PIN">
-    <br>
+    <br><br>
     <button onclick="check()">Enter</button>
 
-    <p id="msg"></p>
+    <p id="msg" style="font-weight: bold;"></p>
 </div>
 
-<!-- PAGE 3 DASHBOARD -->
-<div id="p3" class="hidden">
+<div id="p3" style="display:none;">
+    <h2>🚗 ACTIVE RIDE</h2>
+    <h3 id="timer" style="color: red; font-size: 24px; font-weight: bold;">⏱️ 00:00</h3>
 
-<h2>🚗 ACTIVE RIDE</h2>
-<p id="timer">⏱️</p>
-
-<div class="dashboard">
-
-    <div class="card">
-        <h4>📍 Google Map</h4>
-        <iframe width="100%" height="100%"
-        src="https://maps.google.com/maps?q=New York&output=embed"></iframe>
-    </div>
-
-    <div class="card">
-        <h4>▶ YouTube</h4>
-        <a href="https://youtube.com" target="_blank">
-            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="70">
+    <div class="dashboard">
+        
+        <a href="geo:40.7128,-74.0060?q=New+York" class="card-link">
+            <div class="card app-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/2991/2991165.png" width="55" alt="Maps">
+                <h4>Google Maps</h4>
+                <span class="open-btn">Open App</span>
+            </div>
         </a>
+
+        <a href="intent://www.youtube.com#Intent;package=com.google.android.youtube;scheme=https;end" class="card-link">
+            <div class="card app-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="55" alt="YouTube">
+                <h4>YouTube</h4>
+                <span class="open-btn">Open App</span>
+            </div>
+        </a>
+
+        <a href="waze://?ll=40.7128,-74.0060&navigate=yes" class="card-link">
+            <div class="card app-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/732/732258.png" width="55" alt="Waze">
+                <h4>Waze Map</h4>
+                <span class="open-btn">Open App</span>
+            </div>
+        </a>
+
+        <div class="card" style="display: flex; flex-direction: column; justify-content: center;">
+            <h4 style="margin: 0 0 5px 0;">📝 Notebook</h4>
+            <textarea placeholder="Write notes..." style="width:85%; height:55px; font-size:14px; margin:0;"></textarea>
+        </div>
+
     </div>
-
-    <div class="card">
-        <h4>📝 Notebook</h4>
-        <textarea id="note"></textarea>
-    </div>
-
-    <div class="card">
-        <h4>🚕 Waze</h4>
-        <iframe width="100%" height="100%"
-        src="https://embed.waze.com/iframe?zoom=12&lat=40.7128&lon=-74.0060"></iframe>
-    </div>
-
-    <div class="empty"></div>
-    <div class="empty"></div>
-
 </div>
 
-</div>
-
-<!-- PAGE 4 -->
-<div id="p4" class="hidden">
-    <h2>⛔ TIME EXPIRED</h2>
+<div id="p4" style="display:none;">
+    <h3>⭐ Rate Ride</h3>
     <button onclick="renew()">🔁 Renew</button>
-</div>
+    <br><br>
 
-<!-- PAGE 5 -->
-<div id="p5" class="hidden">
+    <span class="star" onclick="rate(1)">★</span>
+    <span class="star" onclick="rate(2)">★</span>
+    <span class="star" onclick="rate(3)">★</span>
+    <span class="star" onclick="rate(4)">★</span>
+    <span class="star" onclick="rate(5)">★</span>
 
-<h3>⭐ Rate Ride</h3>
+    <p id="rt" style="font-weight: bold; color: green;"></p>
 
-<span class="star" onclick="rate(1)">★</span>
-<span class="star" onclick="rate(2)">★</span>
-<span class="star" onclick="rate(3)">★</span>
-<span class="star" onclick="rate(4)">★</span>
-<span class="star" onclick="rate(5)">★</span>
+    <textarea id="sug" placeholder="Write feedback..."></textarea>
+    <br><br>
+    <button onclick="send()">Send</button>
 
-<p id="rt"></p>
-
-<textarea id="sug"></textarea>
-<br>
-<button onclick="send()">Send</button>
-
-<p id="thx"></p>
-
+    <p id="thx" style="color: blue; font-weight: bold;"></p>
 </div>
 
 </div>
 
 <script>
-
 let pinCode="";
 let time=0;
 let timer;
 let rating=0;
 
 function show(n){
-    for(let i=1;i<=5;i++){
-        let x=document.getElementById("p"+i);
-        if(x) x.style.display="none";
+    for(let i=1;i<=4;i++){
+        let p=document.getElementById("p"+i);
+        if(p) p.style.display="none";
     }
     document.getElementById("p"+n).style.display="block";
 }
@@ -199,61 +226,86 @@ function show(n){
 show(1);
 
 function go(min,price){
-    pinCode=(min==1)?"R1230":"RIDE60";
-    time=min*60;
+    // ৩০ মিনিটের জন্য পিন R1230 এবং ৬০ মিনিটের জন্য RIDE60
+    pinCode = (min == 30) ? "R1230" : "RIDE60";
+    time = min * 60;
+
     document.getElementById("price").innerText="💰 $"+price;
+    document.getElementById("pin").value="";
+    document.getElementById("msg").innerText="";
+
     show(2);
 }
 
 function check(){
-    let p=document.getElementById("pin").value.trim();
-    if(p===pinCode){
-        document.getElementById("box").classList.add("fullscreen");
-        show(3);
-        start();
+    let p=document.getElementById("pin").value.trim().toUpperCase();
+
+    if(p === pinCode){
+        document.getElementById("msg").style.color = "green";
+        document.getElementById("msg").innerText="✅ Access Granted";
+
+        setTimeout(()=>{
+            document.getElementById("box").classList.add("fullscreen");
+            show(3);
+            start();
+        },500);
+
     }else{
+        document.getElementById("msg").style.color = "red";
         document.getElementById("msg").innerText="❌ Wrong PIN";
     }
 }
 
 function start(){
-clearInterval(timer);
-timer=setInterval(()=>{
-    let m=Math.floor(time/60);
-    let s=time%60;
+    clearInterval(timer);
 
-    document.getElementById("timer").innerText=
-    "⏱️ "+m+":"+ (s<10?"0":"")+s;
+    timer=setInterval(()=>{
+        if(time <= 0){
+            clearInterval(timer);
+            document.getElementById("box").classList.remove("fullscreen");
+            show(4);
+            return;
+        }
 
-    time--;
+        time--;
+        let m=Math.floor(time/60);
+        let s=time%60;
 
-    if(time<0){
-        clearInterval(timer);
-        show(4);
-        show(5);
-    }
-},1000);
+        document.getElementById("timer").innerText = "⏱️ "+m+":"+ (s<10?"0":"")+s;
+    },1000);
 }
 
 function renew(){
     document.getElementById("box").classList.remove("fullscreen");
+    document.getElementById("rt").innerText = "";
+    document.getElementById("thx").innerText = "";
+    document.getElementById("sug").value = "";
+    let stars=document.querySelectorAll(".star");
+    stars.forEach(e => e.classList.remove("active"));
     show(1);
 }
 
 function rate(n){
     rating=n;
-    let st=document.querySelectorAll(".star");
-    st.forEach((e,i)=>{
+
+    let stars=document.querySelectorAll(".star");
+    stars.forEach((e,i)=>{
         e.classList.remove("active");
         if(i<n) e.classList.add("active");
     });
+
+    document.getElementById("rt").innerText = "You rated: " + n + " ⭐";
 }
 
 function send(){
     let s=document.getElementById("sug").value;
-    document.getElementById("thx").innerText="✔ "+s;
-}
 
+    document.getElementById("thx").innerText = "✔ Thanks for feedback: " + s;
+
+    setTimeout(()=>{
+        renew();
+    },1500);
+}
 </script>
 
 </body>
