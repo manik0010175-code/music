@@ -65,7 +65,6 @@ input, textarea{
 }
 .active{color:gold;}
 
-/* ড্যাশবোর্ড গ্রিড আপডেট (প্লে-স্টোর অ্যাপ লুকের জন্য) */
 .dashboard{
     display:grid;
     grid-template-columns: repeat(2, 1fr);
@@ -155,7 +154,7 @@ input, textarea{
 
     <div class="dashboard">
         
-        <a href="geo:40.7128,-74.0060?q=New+York" class="card-link">
+        <a href="https://maps.google.com/?q=New+York" target="_blank" class="card-link">
             <div class="card app-card">
                 <img src="https://cdn-icons-png.flaticon.com/512/2991/2991165.png" width="55" alt="Maps">
                 <h4>Google Maps</h4>
@@ -163,7 +162,7 @@ input, textarea{
             </div>
         </a>
 
-        <a href="intent://www.youtube.com#Intent;package=com.google.android.youtube;scheme=https;end" class="card-link">
+        <a href="https://www.youtube.com" target="_blank" class="card-link">
             <div class="card app-card">
                 <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" width="55" alt="YouTube">
                 <h4>YouTube</h4>
@@ -171,7 +170,7 @@ input, textarea{
             </div>
         </a>
 
-        <a href="waze://?ll=40.7128,-74.0060&navigate=yes" class="card-link">
+        <a href="https://waze.com/ul?ll=40.7128,-74.0060&navigate=yes" target="_blank" class="card-link">
             <div class="card app-card">
                 <img src="https://cdn-icons-png.flaticon.com/512/732/732258.png" width="55" alt="Waze">
                 <h4>Waze Map</h4>
@@ -226,11 +225,10 @@ function show(n){
 show(1);
 
 function go(min,price){
-    // ৩০ মিনিটের জন্য পিন R1230 এবং ৬০ মিনিটের জন্য RIDE60
     pinCode = (min == 30) ? "R1230" : "RIDE60";
     time = min * 60;
 
-    document.getElementById("price").innerText="💰 $"+price;
+    document.getElementById("price").innerText="💰 $" + price;
     document.getElementById("pin").value="";
     document.getElementById("msg").innerText="";
 
